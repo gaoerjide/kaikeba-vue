@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>购物车</title>
+    <style>
+        .active {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <h2 v-bind:title="title">
+            {{title}}
+        </h2>
+        <!-- 用户输入 -->
+        <p>
+            <input type="text" v-model='course' v-on:keydown.enter="addCourse"></input>
+            <button @click="addCourse">新增</button>
+        </p>
+
+        <!-- 列表组件 -->
+        <course-list :courses="courses"></course-list>
+
+        <p>
+            课程总数：{{total}}
+        </p>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js "></script>
+    <script>
+        //课程列表组件
+        Vue.component('course-list', {
+            data() {
+                return {
+                    selectedCourse: '',
+                }
+            },
+            props: {
+                courses: {
+                    type: Array,
+                    default: []
+                }
+
+            },
+            template: `
+                <div>
+                    <!-- 条件渲染 -->
+                    <p v-if="courses.length == 0">没有任何课程信息</p>
+                    
+                    <!-- 列表渲染 -->
+                    <!-- <div v-for="c in courses" :key="c" 
+                      :class="{active: selectedCourse === c}" @click="selectedCourse = c">
+                      {{ c }}
+                    </div> -->
+                    <!-- style -->
+                    <div class="course-list" v-else>
+                      <div v-for="c in courses" :key="c.name"
+                        :style="{backgroundColor: (selectedCourse === c ? '#ddd' : 'transparent')}"
+                        @click="selectedCourse = c">
+                        {{ c }}
+                      </div>
+                    </div>
+                </div>
+              `,
+        })
+        const app = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    title: '开课吧购物车',
+                    course: '',
+                    courses: ['web全栈课程', 'web高级课程']
+                }
+            },
+            methods: {
+                addCourse() {
+                    this.courses.push(this.course)
+                    this.course = ''
+                }
+            },
+        })
+        console.log(app.$options.render);
+    </script>
+</body>
+
+</html>
